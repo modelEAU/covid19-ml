@@ -1,0 +1,355 @@
+data_folder: "input_data"
+models_folder: "outputs/models"
+metrics_folder: "outputs/metrics"
+logs_folder: "outputs/logs"
+
+hparams:
+  recipe: null
+  random_seed: 42
+  task: "REGRESSION"
+  trend_model_window: 7
+  trend_model_order: 1
+  denoise_window: 3
+  insert_dummy_variable: False
+  model_type: "city_conv"
+  train_classification: False
+  train_prediction: True
+  use_identity_for_city_heads: True
+  loss_fn: "MAE"
+
+  optimizer:
+    type: "AdamW"
+    learning_rate: 0.001
+    momentum: 0.0075
+    weight_decay: 0.0015
+    learning_rate_decay: 6.2e-5
+
+  classifier:
+    n_hidden: 24
+    n_layers: 0
+
+  city_conv:
+    n_middle_channels_city: 1
+    n_out_channels_city: 16
+    n_layers_city: 1
+    city_pooling_padding: 1
+    city_pooling_kernel_size: 5
+    city_pooling_stride: 1
+    city_pooling_dilation: 2
+    city_kernel_size: 3
+    city_conv_padding: 1
+    city_conv_dilation: 1
+    city_conv_stride: 1
+    n_layers_middle: 1
+    entry_nn_middle: True
+    entry_nn_prediction: False
+    n_middle_channels_middle: 4
+    n_out_channels_middle: 8
+    middle_pooling_padding: 0
+    middle_pooling_kernel_size: 3
+    middle_pooling_stride: 1
+    middle_pooling_dilation: 1
+    middle_kernel_size: 2
+    middle_conv_padding: 0
+    middle_conv_dilation: 1
+    middle_conv_stride: 3
+    n_layers_prediction: 3
+    n_middle_channels_prediction: 8
+    n_out_channels_prediction: 4
+    prediction_kernel_size: 3
+    prediction_pooling_padding: 1
+    prediction_pooling_kernel_size: 5
+    prediction_pooling_stride: 2
+    prediction_pooling_dilation: 1
+    prediction_conv_padding: 0
+    prediction_conv_dilation: 1
+    prediction_conv_stride: 2
+    pooling_type: "max"
+
+    dropout_rate: 0.3
+    leaking_rate: 0.001
+    activation: leaky_relu
+
+  n_montecarlo_samples: 25
+  batch_size: 4
+  classification_batch_size: 8
+  n_back: 14
+  n_forward: 7
+  n_splits: 5
+  patience: 10
+  target_type: "delta"
+  weighted_loss: True
+  kl_weight: -1
+  classifier_regularization: 0.5
+  fake_ww_shift: -1
+  artificial_noise: False
+  log_transform: True
+  small_nn: null
+
+datasets:
+  qc1_2021:
+    city: QUEBEC_EAST
+    filename: qc_01_2021.parquet
+    date_start: "2021-01-01"
+    date_end: "2021-12-31"
+    date_split: "2021-10-01"
+    validation_split: 2
+
+  qc1_2022:
+    city: QUEBEC_EAST
+    filename: qc_01_2022.parquet
+    date_start: "2022-03-01"
+    date_end: "2022-07-28"
+    date_split: "2022-05-23"
+    validation_split: 2
+
+  qc2_2021:
+    city: QUEBEC_WEST
+    filename: qc_02_2021.parquet
+    date_start: "2021-01-01"
+    date_end: "2021-12-31"
+    date_split: "2021-10-01"
+    validation_split: 2
+
+  qc2_2022:
+    city: QUEBEC_WEST
+    filename: qc_02_2022.parquet
+    date_start: "2022-03-01"
+    date_end: "2022-07-28"
+    date_split: "2022-05-23"
+    validation_split: 2
+
+
+recipes:
+  basicph_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  vaxph_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - PCT_VAX1
+      - PCT_VAX2
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  postestsph_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - POS_TESTS_RATE
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - COVN1
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1flow_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1_flow_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - COVN1
+      - FLOW
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  vaxph_n1flow_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - PCT_VAX1
+      - PCT_VAX2
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  vaxph_n1_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - COVN1
+      - PCT_VAX1
+      - PCT_VAX2
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  n1flow_smooth:
+    inputs:
+      - N1_FLOW
+    input_ts:
+      - SMOOTH
+    targets:
+      - N1_FLOW
+    target_ts:
+      - SMOOTH
+  n1_smooth:
+    inputs:
+      - COVN1
+    input_ts:
+      - SMOOTH
+    targets:
+      - COVN1
+    target_ts:
+      - SMOOTH
+  # wastewater recipes
+  basicph_n1flow_temp_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - WATER_TEMP
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1flow_rain_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - RAINFALL
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1flow_nh4_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - NH4_FLOW
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1flow_liquid_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - NH4_FLOW
+      - RAINFALL
+      - WATER_TEMP
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1flow_tss_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - TSS_FLOW
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH
+  basicph_n1flow_expert_smooth:
+    inputs:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+      - N1_FLOW
+      - TSS_FLOW
+      #- COD_FLOW
+      - NH4_FLOW
+      - RAINFALL
+      - WATER_TEMP
+    input_ts:
+      - SMOOTH
+    targets:
+      - HOSPITALIZED
+      - CASES
+      - DEATHS
+    target_ts:
+      - SMOOTH

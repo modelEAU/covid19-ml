@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# training artifacts
+*logs/*
+*checkpoints/*
+Training/*
+
+# environment variables
+.env
+
+#MacOS
+*.DS_Store
+
+# Data
+input_data/*
