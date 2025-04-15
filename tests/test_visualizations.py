@@ -6,8 +6,8 @@ import pandas as pd
 import torch
 
 sys.path.append("src")
-from types_ml import HeadTensors, Stage, StepResult
-from visualizations import (
+from covid19_ml.types_ml import HeadTensors, Stage, StepResult
+from covid19_ml.visualizations import (
     get_color_cycle,
     plot_45deg_per_day,  # noqa: E402
     plot_all_prediction_45_degrees,

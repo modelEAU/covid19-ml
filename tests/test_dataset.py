@@ -3,16 +3,18 @@ import sys
 import pytest
 
 sys.path.append("src")
-from datasets import CityDataSet  # noqa: E402
 from fixtures import (  # noqa: E402 F401
     parquet_path_short,
     sample_tensor_config_regression,
 )
-from types_ml import City  # noqa: E402
+
+from covid19_ml.datasets import CityDataSet  # noqa: E402
+from covid19_ml.types_ml import City  # noqa: E402
 
 
 def test_city_dataset(
-    parquet_path_short, sample_tensor_config_regression  # noqa: F811
+    parquet_path_short,
+    sample_tensor_config_regression,  # noqa: F811
 ):
     dataset = CityDataSet(
         path=parquet_path_short,

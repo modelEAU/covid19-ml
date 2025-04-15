@@ -1,4 +1,3 @@
-import itertools
 import sys
 
 import pandas as pd
@@ -25,8 +24,8 @@ from fixtures import (  # noqa: E402 F401
 
 sys.path.append("src")
 
-from models import CityConvModel  # noqa: E402
-from types_ml import (
+from covid19_ml.models import CityConvModel  # noqa: E402
+from covid19_ml.types_ml import (
     HeadTensors,  # noqa: E402
     Stage,  # noqa: E402
     StepResult,  # noqa: E402

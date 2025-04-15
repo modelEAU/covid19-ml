@@ -8,7 +8,7 @@ sys.path.append("src")
 
 from sklearn.linear_model import LinearRegression
 
-from qualitative import (
+from covid19_ml.qualitative import (
     calculate_curvature,
     calculate_monotonic_classes,
     calculate_slope,

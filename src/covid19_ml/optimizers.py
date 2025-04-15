@@ -1,5 +1,6 @@
 import torch
-from types_config import Optimizer, OptimizerConfig
+
+from covid19_ml.types_config import Optimizer, OptimizerConfig
 
 
 def create_optimizer(

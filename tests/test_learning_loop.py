@@ -1,10 +1,9 @@
 import sys
 
-import pytest
 from pydantic import BaseModel
 
 sys.path.append("src")
-from learning_loop import model_to_dict
+from covid19_ml.learning_loop import model_to_dict
 
 
 def test_simple_base_model_conversion():

@@ -1,9 +1,10 @@
 from pathlib import Path
 
 import pandas as pd
-from to_tensor import to_tensor
 from torch.utils.data import Dataset
-from types_ml import City, TensorConfig
+
+from covid19_ml.to_tensor import to_tensor
+from covid19_ml.types_ml import City, TensorConfig
 
 
 class CityDataSet(Dataset):

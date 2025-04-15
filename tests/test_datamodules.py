@@ -15,7 +15,10 @@ from fixtures import (  # noqa: E402 F401
     sample_tensor_config_regression,
 )
 
-from datamodules import get_batch_item_info, recombine_batch_item_info  # noqa: E402
+from covid19_ml.datamodules import (  # noqa: E402
+    get_batch_item_info,
+    recombine_batch_item_info,
+)
 
 
 def test_get_batch_item_info(sample_regression_citydatamodule1):  # noqa: F811

@@ -5,17 +5,23 @@ import pandas as pd
 import pytest
 
 sys.path.append("src")
-from datamodules import CityDataModule, CombinedDataModule  # noqa: E402
-from datasets import CityDataSet  # noqa: E402
-from models import CityConvModel  # noqa: E402
-from types_config import (  # noqa: E402
+from covid19_ml.datamodules import CityDataModule, CombinedDataModule  # noqa: E402
+from covid19_ml.datasets import CityDataSet  # noqa: E402
+from covid19_ml.models import CityConvModel  # noqa: E402
+from covid19_ml.types_config import (  # noqa: E402
     CityClassifierConfig,
     CityConvConfig,
     HyperParameters,  # noqa: E402
     OptimizerConfig,  # noqa: E402
     Recipe,  # noqa: E402
 )
-from types_ml import City, Task, TensorConfig, TimeSeriesType, Variable  # noqa: E402
+from covid19_ml.types_ml import (  # noqa: E402
+    City,
+    Task,
+    TensorConfig,
+    TimeSeriesType,
+    Variable,
+)
 
 
 @pytest.fixture

@@ -14,13 +14,17 @@ from easydict import EasyDict as edict
 from pydantic import BaseModel
 from pytorch_lightning.loggers import CometLogger
 
-from augment import augment_datasets
-from datamodules import CityDataModule, ClassBalancedDataModule, CombinedDataModule
-from datasets import CityDataSet
-from models import CityConvModel, IdentityModule
-from modules import CityHeadModule
-from types_config import Config, DataSetConfig, HyperParameters, Recipe
-from types_ml import (
+from covid19_ml.augment import augment_datasets
+from covid19_ml.datamodules import (
+    CityDataModule,
+    ClassBalancedDataModule,
+    CombinedDataModule,
+)
+from covid19_ml.datasets import CityDataSet
+from covid19_ml.models import CityConvModel, IdentityModule
+from covid19_ml.modules import CityHeadModule
+from covid19_ml.types_config import Config, DataSetConfig, HyperParameters, Recipe
+from covid19_ml.types_ml import (
     City,
     SavedResults,
     Task,
@@ -29,7 +33,7 @@ from types_ml import (
     TrainingMode,
     Variable,
 )
-from visualizations import plot_city_classifier_distribution_tsne2
+from covid19_ml.visualizations import plot_city_classifier_distribution_tsne2
 
 import pytorch_lightning as pl  # isort: skip
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping  # isort: skip
@@ -871,51 +875,148 @@ def main():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default="model_config.yaml")
+    parser = argparse.ArgumentParser(
+        description="COVID-19 time series prediction model using wastewater data"
+    )
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="model_config.yaml",
+        help="Path to the configuration file (default: model_config.yaml).",
+    )
     parser.add_argument(
         "--recipename",
         type=str,
-        default="basicph_n1_smooth",  # "reg_cases_hosp_deaths_smooth_slope"
+        default="basicph_n1_smooth",
+        help="Name of the variable combination to use as defined in the recipes section of model_config.yaml.",
     )
     parser.add_argument(
         "--datasets",
         type=str,
         nargs="+",
-        default=[
-            "qc1_2021",
-            "qc2_2021",
-        ],
+        default=["qc1_2021", "qc2_2021"],
+        help="List of datasets to use for training, as defined in the datasets section of model_config.yaml.",
     )
-
     parser.add_argument(
         "--before",
         type=int,
         default=-1,
+        help="Days to shift the wastewater SARS-COV-2 signal backward. When >= 0, reported cases replace the signal, shifted backward by this many days, and labeled as COVN1. Used to validate if the model can predict future signals from past observations.",
     )
     parser.add_argument(
         "--loss_fn",
         type=str,
         default="MAE",
+        help="Loss function to use during model training. Options are defined in losses.LOSSES_DICO.",
     )
-    parser.add_argument("--target", type=str, default="delta")
-    parser.add_argument("--noise", action="store_true", default=False)
-    parser.add_argument("--debug", action="store_true", default=False)
-    parser.add_argument("--adv_factor", type=float, default=0.1)
-    parser.add_argument("--model", type=str, default="")
-    parser.add_argument("--unseendataset", type=str, default="")
-    parser.add_argument("--newheaddataset", type=str, default="")
-    parser.add_argument("--hp_line", type=int, default=-1)
-    parser.add_argument("--hp_table", type=str, default="")
-    parser.add_argument("--batch_size", type=int, default=4)
-    parser.add_argument("--activation_fn", type=str, default="leaky_relu")
-    parser.add_argument("--leaking_rate", type=float, default=0.001)
-    parser.add_argument("--dropout_rate", type=float, default=0.3)
-    parser.add_argument("--no_entry_nn", action="store_true", default=False)
-    parser.add_argument("--log", action="store_true", default=False)
-    parser.add_argument("--use_comet", action="store_true", default=False)
-    parser.add_argument("--enc", action="store_true", default=False)
-    parser.add_argument("--warnings", action="store_true", default=False)
+    parser.add_argument(
+        "--target",
+        type=str,
+        default="delta",
+        help="Loss calculation method: 'full' computes loss on total difference between predicted and actual values, while 'delta' focuses on difference between t and t+h.",
+    )
+    parser.add_argument(
+        "--noise",
+        action="store_true",
+        default=False,
+        help="Add random noise to input variables to evaluate model robustness to measurement noise.",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        default=False,
+        help="Enable debug mode with shortened training cycles and simplified logging.",
+    )
+    parser.add_argument(
+        "--adv_factor",
+        type=float,
+        default=0.1,
+        help="Regularization factor (0-1) controlling how strongly the model's encoder heads are encouraged to find similar encodings.",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="",
+        help="Path to an existing model file (.pt format) to use instead of training a new model.",
+    )
+    parser.add_argument(
+        "--unseendataset",
+        type=str,
+        default="",
+        help="Dataset to set aside for testing only, used to assess the model's generalization capability.",
+    )
+    parser.add_argument(
+        "--newheaddataset",
+        type=str,
+        default="",
+        help="Dataset to exclude from main training but use for training a new city-specific head before testing, to assess city-agnostic encoding capabilities.",
+    )
+    parser.add_argument(
+        "--hp_table",
+        type=str,
+        default="",
+        help="Path to CSV file containing hyperparameter configurations with parameter names as columns and values in rows.",
+    )
+    parser.add_argument(
+        "--hp_line",
+        type=int,
+        default=-1,
+        help="Row number in the hyperparameter table (--hp_table) to use for this experiment.",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=4,
+        help="Number of samples per training batch. Overrides the value in model_config.yaml.",
+    )
+    parser.add_argument(
+        "--activation_fn",
+        type=str,
+        default="leaky_relu",
+        help="Activation function to use in the neural network. Overrides the value in model_config.yaml.",
+    )
+    parser.add_argument(
+        "--leaking_rate",
+        type=float,
+        default=0.001,
+        help="Leaking rate for leaky ReLU activation. Overrides the value in model_config.yaml.",
+    )
+    parser.add_argument(
+        "--dropout_rate",
+        type=float,
+        default=0.3,
+        help="Dropout probability for regularization. Overrides the value in model_config.yaml.",
+    )
+    parser.add_argument(
+        "--no_entry_nn",
+        action="store_true",
+        default=False,
+        help="When set, removes the fully-connected layer at the beginning of model modules.",
+    )
+    parser.add_argument(
+        "--log",
+        action="store_true",
+        default=False,
+        help="Enable logging of training metrics and model information.",
+    )
+    parser.add_argument(
+        "--use_comet",
+        action="store_true",
+        default=False,
+        help="Use Comet.ml for experiment tracking instead of file logging. Requires COMET_API_KEY, COMET_WORKSPACE, and COMET_PROJECT environment variables.",
+    )
+    parser.add_argument(
+        "--enc",
+        action="store_true",
+        default=False,
+        help="Enable city-specific encoders in the model architecture.",
+    )
+    parser.add_argument(
+        "--warnings",
+        action="store_true",
+        default=False,
+        help="Treat warnings as errors, useful during development to catch and fix potential issues.",
+    )
     return parser.parse_args()
 
 

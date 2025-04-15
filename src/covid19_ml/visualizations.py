@@ -15,18 +15,19 @@ import torch
 from matplotlib import cm, patches, ticker
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import MaxNLocator
-from model_results import (
-    extract_prediction_from_results_list_by_horizon,
-    extract_predictions_values_df_from_results_list,
-    extract_target_values_df_from_results_list,
-    extract_true_values_series_from_results_list,
-)
 from plotly.validators.scatter.marker import SymbolValidator
 from sklearn.linear_model import LinearRegression
 from sklearn.manifold import TSNE
 from sklearn.metrics import r2_score
 from torchmetrics import ConfusionMatrix
-from types_ml import StepResult, TimeSeriesType, Variable
+
+from covid19_ml.model_results import (
+    extract_prediction_from_results_list_by_horizon,
+    extract_predictions_values_df_from_results_list,
+    extract_target_values_df_from_results_list,
+    extract_true_values_series_from_results_list,
+)
+from covid19_ml.types_ml import StepResult, TimeSeriesType, Variable
 
 plt.style.use("seaborn-v0_8-talk")
 plt.rcParams["font.family"] = "Arial"
@@ -62,7 +63,7 @@ def plot_45deg_per_day(
 
         ax = axes[horizon]
         ax.set_title(
-            f"{var_name} t+{horizon+1}".replace(",SMOOTH", "").title(), fontsize=36
+            f"{var_name} t+{horizon + 1}".replace(",SMOOTH", "").title(), fontsize=36
         )
         ax.set_xlabel("True", fontsize=28)
         ax.set_ylabel("Predicted", fontsize=28)
@@ -203,7 +204,7 @@ def plot_confusion_matrices(
                 # set the labels
                 axes[i, j].set_xlabel("Predicted", fontsize=20)
                 axes[i, j].set_ylabel("True", fontsize=20)
-                axes[i, j].set_title(f"{name} Day t=t+{j+1}", fontsize=20)
+                axes[i, j].set_title(f"{name} Day t=t+{j + 1}", fontsize=20)
                 axes[i, j].tick_params(axis="both", which="major", labelsize=20)
         fig_name = city.replace("_", " ").title()
         figures[fig_name] = fig
@@ -1174,7 +1175,7 @@ def plot_classification(results: list[StepResult], n_days) -> dict[str, figure.F
                     ax=axes[j],
                     color="blue",
                     linestyle="solid",
-                    label=f"prediction t+{j+1}",
+                    label=f"prediction t+{j + 1}",
                 )
                 sns.lineplot(
                     data=true_values,
@@ -1185,7 +1186,7 @@ def plot_classification(results: list[StepResult], n_days) -> dict[str, figure.F
                 )
                 axes[j].set_ylabel("class")
                 # set the title of the subplot to the name of the head
-                axes[j].set_title(f"t+{j+1}")
+                axes[j].set_title(f"t+{j + 1}")
             fig_name = f"{city}_{head_name}"
             figures[fig_name] = fig
     return figures

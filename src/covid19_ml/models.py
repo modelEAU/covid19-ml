@@ -18,37 +18,37 @@ import torch
 import torch.nn as nn
 from matplotlib.figure import Figure
 
-import visualizations
-from datamodules import get_batch_item_info
-from losses import (
+import covid19_ml.visualizations as visualizations
+from covid19_ml.datamodules import get_batch_item_info
+from covid19_ml.losses import (
     LOSSES_DICO,
     CrossEntropyLoss,
 )
-from model_results import (
+from covid19_ml.model_results import (
     extract_prediction_from_results_list_by_horizon,
     extract_prediction_from_results_list_mc_by_horizon,
     extract_true_values_series_from_results_list,
 )
-from modules import (
+from covid19_ml.modules import (
     CityHeadModule,
     GradientReversal,
     MiddleModule,
     PredictionHead,
     SmallNN,
 )
-from optimizers import create_optimizer
-from results_analysis import (
+from covid19_ml.optimizers import create_optimizer
+from covid19_ml.results_analysis import (
     compile_city_classification_metrics,
     compile_regression_metrics,
     create_distances_dico,
 )
-from types_config import (
+from covid19_ml.types_config import (
     CityConvConfig,
     HyperParameters,
     OptimizerConfig,
     SmallNNConfig,
 )
-from types_ml import (
+from covid19_ml.types_ml import (
     HeadTensors,
     Stage,
     StepResult,

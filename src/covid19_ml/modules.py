@@ -8,7 +8,7 @@ from typing import Union
 import torch
 import torch.nn as nn
 
-from types_ml import TimeSeriesType, Variable
+from covid19_ml.types_ml import TimeSeriesType, Variable
 
 
 class SequenceTooShortError(Exception): ...

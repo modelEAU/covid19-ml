@@ -12,7 +12,8 @@ from fixtures import (  # noqa: E402 F401
     parquet_path_short,
     sample_tensor_config_regression,
 )
-from to_tensor import (  # noqa: E402
+
+from covid19_ml.to_tensor import (  # noqa: E402
     compute_centreau_health,  # noqa: E402
     compute_curvature,  # noqa: E402
     compute_slope,  # noqa: E402
@@ -30,7 +31,7 @@ from to_tensor import (  # noqa: E402
     shift_forward,  # noqa: E402
     to_tensor,  # noqa: E402
 )
-from types_ml import City, TimeSeriesType, Variable  # noqa: E402
+from covid19_ml.types_ml import City, TimeSeriesType, Variable  # noqa: E402
 
 
 def test_find_key():
@@ -242,7 +243,8 @@ def test_compute_ts_types():
     smooth_window = 5
     model_window = 5
     pd.testing.assert_frame_equal(
-        df, compute_ts_types(df, None, smooth_window, model_window, period=0)  # type: ignore
+        df,
+        compute_ts_types(df, None, smooth_window, model_window, period=0),  # type: ignore
     )
     pd.testing.assert_frame_equal(
         df, compute_ts_types(df, [], smooth_window, model_window, period=0)

@@ -16,8 +16,8 @@ from scipy.fft import fft, ifft
 from scipy.signal import savgol_filter
 from statsmodels.tsa.seasonal import seasonal_decompose
 
-import qualitative
-from types_ml import City, Task, TensorConfig, TimeSeriesType, Variable
+import covid19_ml.qualitative as qualitative
+from covid19_ml.types_ml import City, Task, TensorConfig, TimeSeriesType, Variable
 
 HEALTH_PREFIX = "CPHD-"
 

@@ -4,10 +4,11 @@ from typing import Callable, Optional
 import pandas as pd
 import pytorch_lightning as pl
 import torch
-from datasets import CityDataSet
 from sklearn.model_selection import KFold
 from torch.utils.data import ConcatDataset, DataLoader, Subset, default_collate
-from types_ml import Task
+
+from covid19_ml.datasets import CityDataSet
+from covid19_ml.types_ml import Task
 
 
 def get_batch_item_info(info, index):

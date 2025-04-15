@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 import torch
-from types_ml import StepResult
+
+from covid19_ml.types_ml import StepResult
 
 
 def extract_true_values_series_from_results_list(
@@ -50,7 +51,7 @@ def extract_target_values_df_from_results_list(
             last_known_value = result.head_results[name].input[-1].numpy().item()
             extracted_rows[date_t] = extracted_rows[date_t] - last_known_value
     df = pd.DataFrame(extracted_rows).T.sort_index()
-    df.columns = [f"t+{i+1}" for i in range(n_days_forward)]
+    df.columns = [f"t+{i + 1}" for i in range(n_days_forward)]
     return pd.DataFrame(extracted_rows).T.sort_index()
 
 
@@ -68,7 +69,7 @@ def extract_predictions_values_df_from_results_list(
 
         extracted_rows[date_t] = values
     df = pd.DataFrame(extracted_rows).T.sort_index()
-    df.columns = [f"t+{i+1}" for i in range(n_days_forward)]
+    df.columns = [f"t+{i + 1}" for i in range(n_days_forward)]
     return pd.DataFrame(extracted_rows).T.sort_index()
 
 

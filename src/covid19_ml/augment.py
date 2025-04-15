@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 from imblearn.over_sampling import SMOTE, RandomOverSampler
 
-from datasets import CityDataSet
+from covid19_ml.datasets import CityDataSet
 
 
 def stack_all_datsets(

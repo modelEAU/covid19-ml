@@ -3,7 +3,7 @@ import sys
 import torch
 
 sys.path.append("src")
-from results_analysis import (
+from covid19_ml.results_analysis import (
     closest_pair,
     min_distance_between_cities,
 )

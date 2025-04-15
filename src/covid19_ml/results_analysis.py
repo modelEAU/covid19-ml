@@ -33,13 +33,12 @@ from torchmetrics.functional import (
     recall,
 )
 
-import metrics
-from model_results import (
+from covid19_ml.model_results import (
     extract_prediction_from_results_list_by_horizon,
     extract_target_series_from_results_list_by_horizon,
     extract_true_values_from_results_list_matched,
 )
-from types_ml import (
+from covid19_ml.types_ml import (
     City,
     ClassificationMetric,
     RegressionMetric,

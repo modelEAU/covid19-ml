@@ -4,13 +4,13 @@ import torch
 import torch.nn as nn
 
 sys.path.append("src")
-from modules import (
+from covid19_ml.modules import (
     CityHeadModule,
     MiddleModule,  # noqa: E402
     PredictionHead,
     SmallNN,
 )
-from types_ml import City, TimeSeriesType, Variable
+from covid19_ml.types_ml import City, TimeSeriesType, Variable
 
 
 def test_smal_nn_instantiation():
