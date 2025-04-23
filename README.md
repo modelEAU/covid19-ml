@@ -1,5 +1,7 @@
 # COVID-19-ML
 
+[![DOI](https://zenodo.org/badge/967599069.svg)](https://doi.org/10.5281/zenodo.15272087)
+
 A machine learning project using convolutional neural networks and adversarial training for short-term COVID-19 epidemiological forecasting.
 
 ## Description
